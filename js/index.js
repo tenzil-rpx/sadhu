@@ -16,20 +16,20 @@ function Firefly(){
   this.x = center_x +  Math.sin(random_angle) * ((Math.random() * (max_distance - min_distance) + min_distance));
   this.y = center_y + Math.cos(random_angle) * ((Math.random() * (max_distance - min_distance) + min_distance));
 
-  
-  
+
+
   this.angle_of_attack = Math.atan2(  this.y - center_y ,  this.x - center_x);
   this.vel =  ( Math.random() * 5 ) + 5 ;
-  
+
   this.color = colors[ ~~(colors.length * Math.random()) ]
-  
-  
+
+
   this.xvel = this.vel * Math.cos( this.angle_of_attack );
   this.yvel = this.vel * Math.sin( this.angle_of_attack );
   this.size = 2 + Math.random() * 2;
-  
+
   this.phase_diff = Math.random() * TwoPI;
-    
+
 }
 
 
@@ -50,7 +50,7 @@ Firefly.prototype.render = function(ctx, now){
   ctx.globalAlpha = Math.max(Math.abs(Math.sin( (now + this.phase_diff) / (~~(this.size * 100)) )), 0.4);
   ctx.fillStyle = this.color;
   ctx.shadowColor = this.color;
-  ctx.shadowBlur = 20 / this.size; 
+  ctx.shadowBlur = 20 / this.size;
   ctx.beginPath();
   ctx.arc( this.x, this.y, this.size, 0, TwoPI, false);
   ctx.closePath();
@@ -73,32 +73,32 @@ var last_emit = 0;
 
 function render(){
   now = Date.now();
-  dt = (last - now) / 1000; 
+  dt = (last - now) / 300;
   last = now;
   ctx.clearRect(0,0,w,h);
   fireflies.forEach(function(f){
     f.move(dt);
-    f.render(ctx, now);    
+    f.render(ctx, now);
   });
-  
+
   fireflies = fireflies.filter(function(f){
     return (f.size > 1);
   });
 
-  alive_fireflies = fireflies.length;  
-  
+  alive_fireflies = fireflies.length;
+
   if( alive_fireflies < max_fireflies && last_emit - now < - 100){
     fireflies.push( new Firefly());
     last_emit = now;
   }
-  
+
   requestAnimationFrame(render);
 }
 
 
 render();
 
-// 
+//
 function isOnHeart(x,y){
 	  x = ((x - center_x) / (min_distance * 1.2)) * 1.8;
 	  y = ((y - center_y) / (min_distance)) * - 1.8;
